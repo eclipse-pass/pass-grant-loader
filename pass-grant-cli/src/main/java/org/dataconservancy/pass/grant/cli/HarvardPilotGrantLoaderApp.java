@@ -16,15 +16,16 @@
 
 package org.dataconservancy.pass.grant.cli;
 
+import java.util.Properties;
+
 import org.dataconservancy.pass.grant.data.GrantConnector;
 import org.dataconservancy.pass.grant.data.HarvardPilotConnector;
 import org.dataconservancy.pass.grant.data.HarvardPilotPassUpdater;
 import org.dataconservancy.pass.grant.data.PassUpdater;
 
-import java.util.Properties;
-
 class HarvardPilotGrantLoaderApp extends BaseGrantLoaderApp {
-    HarvardPilotGrantLoaderApp(String startDate, String awardEndDate, boolean email, String mode, String action, String dataFileName) {
+    HarvardPilotGrantLoaderApp(String startDate, String awardEndDate, boolean email, String mode, String action,
+                               String dataFileName) {
         super(startDate, awardEndDate, email, mode, action, dataFileName);
         super.setTimestamp(false);
     }

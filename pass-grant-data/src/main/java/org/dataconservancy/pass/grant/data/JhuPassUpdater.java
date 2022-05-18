@@ -16,17 +16,21 @@
 
 package org.dataconservancy.pass.grant.data;
 
-import org.dataconservancy.pass.client.PassClient;
-import org.dataconservancy.pass.model.support.Identifier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.dataconservancy.pass.model.User;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_EMAIL;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_EMPLOYEE_ID;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_FIRST_NAME;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_HOPKINS_ID;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_INSTITUTIONAL_ID;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_LAST_NAME;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_MIDDLE_NAME;
 
 import java.util.Map;
 
-import static org.dataconservancy.pass.grant.data.CoeusFieldNames.*;
-
+import org.dataconservancy.pass.client.PassClient;
+import org.dataconservancy.pass.model.User;
+import org.dataconservancy.pass.model.support.Identifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is responsible for taking the Set of Maps derived from the ResultSet from the database query and
@@ -43,8 +47,7 @@ public class JhuPassUpdater extends DefaultPassUpdater {
     private static final String HOPKINS_ID_TYPE = "hopkinsid";
     private static final String JHED_ID_TYPE = "jhed";
 
-    public JhuPassUpdater(PassClient passClient)
-    {
+    public JhuPassUpdater(PassClient passClient) {
         super(new CoeusPassEntityUtil(), passClient);
         super.setDomain(DOMAIN);
     }

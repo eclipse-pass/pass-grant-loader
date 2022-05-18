@@ -16,6 +16,39 @@
 
 package org.dataconservancy.pass.grant.data;
 
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_ABBREVIATED_ROLE;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_DIRECT_FUNDER_LOCAL_KEY;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_DIRECT_FUNDER_NAME;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_DIRECT_FUNDER_POLICY;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_GRANT_AWARD_DATE;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_GRANT_AWARD_NUMBER;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_GRANT_AWARD_STATUS;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_GRANT_END_DATE;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_GRANT_LOCAL_KEY;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_GRANT_PROJECT_NAME;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_GRANT_START_DATE;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_PRIMARY_FUNDER_LOCAL_KEY;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_PRIMARY_FUNDER_NAME;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_PRIMARY_FUNDER_POLICY;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_UPDATE_TIMESTAMP;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_EMAIL;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_EMPLOYEE_ID;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_FIRST_NAME;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_HOPKINS_ID;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_INSTITUTIONAL_ID;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_LAST_NAME;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_MIDDLE_NAME;
+import static org.dataconservancy.pass.grant.data.JhuPassUpdater.returnLaterUpdate;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.dataconservancy.pass.client.PassClient;
 import org.dataconservancy.pass.client.PassClientFactory;
 import org.dataconservancy.pass.model.Funder;
@@ -26,18 +59,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.dataconservancy.pass.grant.data.CoeusFieldNames.*;
-import static org.dataconservancy.pass.grant.data.JhuPassUpdater.returnLaterUpdate;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 /**
  * Test class for building the {@code List} of {@code Grant}s
@@ -50,9 +71,8 @@ public class JhuPassUpdaterTest {
     @Mock
     private PassClient passClientMock;
 
-//    private PassEntityUtil passEntityUtil = new CoeusPassEntityUtil();
-
-   // private String domain = "johnshopkins.edu";
+    // private PassEntityUtil passEntityUtil = new CoeusPassEntityUtil();
+    // private String domain = "johnshopkins.edu";
 
     private URI grantUri;
 
@@ -70,17 +90,18 @@ public class JhuPassUpdaterTest {
         when(passClientMock.createResource(any(Funder.class))).thenReturn(funderUri1, funderUri2);
         when(passClientMock.createResource(any(User.class))).thenReturn(userUri1, useruri2);
 
-//        when(directoryServiceUtilMock.getHopkinsIdForEmployeeId("0000222")).thenReturn("A1A1A1");
- //       when(directoryServiceUtilMock.getHopkinsIdForEmployeeId("0000333")).thenReturn("B2B2B2");
+        // when(directoryServiceUtilMock.getHopkinsIdForEmployeeId("0000222")).thenReturn("A1A1A1");
+        // when(directoryServiceUtilMock.getHopkinsIdForEmployeeId("0000333")).thenReturn("B2B2B2");
     }
+
     /**
      * Test static timestamp utility method to verify it returns the later of two supplied timestamps
      */
     @Test
     public void testReturnLatestUpdate() {
         String baseString = "1980-01-01 00:00:00.0";
-        String earlyDate  = "2018-01-02 03:04:05.0";
-        String laterDate  = "2018-01-02 04:08:09.0";
+        String earlyDate = "2018-01-02 03:04:05.0";
+        String laterDate = "2018-01-02 04:08:09.0";
 
         String latestDate = returnLaterUpdate(baseString, earlyDate);
         assertEquals(earlyDate, latestDate);
@@ -98,12 +119,12 @@ public class JhuPassUpdaterTest {
         String awardNumber = "12345678";
         String awardStatus = "Active";
         String localKey = "8675309";
-        String projectName =  "Moo Project";
+        String projectName = "Moo Project";
         String awardDate = "01/01/2000";
         String startDate = "01/01/2001";
-        String endDate =  "01/01/2002";
+        String endDate = "01/01/2002";
         String directFunderId = "000029282";
-        String directFunderName =  "JHU Department of Synergy";
+        String directFunderName = "JHU Department of Synergy";
         String primaryFunderId = "8675309";
         String primaryFunderName = "J. L. Gotrocks Foundation";
         String primaryFunderPolicy = "policy1";
@@ -116,7 +137,7 @@ public class JhuPassUpdaterTest {
         rowMap.put(C_GRANT_PROJECT_NAME, projectName);
         rowMap.put(C_GRANT_AWARD_DATE, awardDate);
         rowMap.put(C_GRANT_START_DATE, startDate);
-        rowMap.put(C_GRANT_END_DATE,endDate);
+        rowMap.put(C_GRANT_END_DATE, endDate);
 
         rowMap.put(C_DIRECT_FUNDER_LOCAL_KEY, directFunderId);
         rowMap.put(C_DIRECT_FUNDER_NAME, directFunderName);
@@ -155,7 +176,7 @@ public class JhuPassUpdaterTest {
         rowMap.put(C_USER_LAST_NAME, "Lartz");
         rowMap.put(C_USER_EMAIL, "alartz3@jhu.edu");
         rowMap.put(C_USER_INSTITUTIONAL_ID, "MLARTZ5");
-        rowMap.put(C_USER_EMPLOYEE_ID,"0000222");
+        rowMap.put(C_USER_EMPLOYEE_ID, "0000222");
         rowMap.put(C_USER_HOPKINS_ID, "A1A1A1");
 
         rowMap.put(C_UPDATE_TIMESTAMP, "2018-01-01 00:00:00.0");
@@ -163,7 +184,6 @@ public class JhuPassUpdaterTest {
 
         rowMap.put(C_DIRECT_FUNDER_POLICY, primaryFunderPolicy);
         rowMap.put(C_PRIMARY_FUNDER_POLICY, directFunderPolicy);
-
 
         resultSet.add(rowMap);
 
@@ -200,7 +220,7 @@ public class JhuPassUpdaterTest {
         rowMap.put(C_USER_LAST_NAME, "Lartz");
         rowMap.put(C_USER_EMAIL, "mlartz3@jhu.edu");
         rowMap.put(C_USER_INSTITUTIONAL_ID, "MLARTZ5");
-        rowMap.put(C_USER_EMPLOYEE_ID,"0000222");
+        rowMap.put(C_USER_EMPLOYEE_ID, "0000222");
         rowMap.put(C_USER_HOPKINS_ID, "A1A1A1");
         rowMap.put(C_UPDATE_TIMESTAMP, "2018-01-01 0:00:00.0");
 
@@ -215,7 +235,6 @@ public class JhuPassUpdaterTest {
         assertEquals("johnshopkins.edu:jhed:mlartz5", newUser.getLocatorIds().get(2));
     }
 
-
     @Test
     public void testPrimaryFunderBuilding() {
         Map<String, String> rowMap = new HashMap<>();
@@ -227,12 +246,12 @@ public class JhuPassUpdaterTest {
         Funder newFunder = passUpdater.buildPrimaryFunder(rowMap);
 
         assertEquals("Funder Name", newFunder.getName());
-        assertEquals("8675309",newFunder.getLocalKey());
+        assertEquals("8675309", newFunder.getLocalKey());
         assertEquals("https://localhost:8080/fcrepo/rest/policy1", newFunder.getPolicy().toString());
 
     }
 
-    @Test (expected = RuntimeException.class)
+    @Test(expected = RuntimeException.class)
     public void testGrantModeCheck() {
         List<Map<String, String>> grantResultSet = new ArrayList<>();
         Map<String, String> rowMap = new HashMap<>();
@@ -246,7 +265,7 @@ public class JhuPassUpdaterTest {
 
     }
 
-    @Test (expected = RuntimeException.class)
+    @Test(expected = RuntimeException.class)
     public void testUserModeCheck() {
         List<Map<String, String>> userResultSet = new ArrayList<>();
         Map<String, String> rowMap = new HashMap<>();

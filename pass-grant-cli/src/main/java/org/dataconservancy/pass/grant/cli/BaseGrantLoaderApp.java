@@ -16,10 +16,25 @@
 
 package org.dataconservancy.pass.grant.cli;
 
-import org.dataconservancy.pass.grant.data.GrantConnector;
-import org.dataconservancy.pass.grant.data.PassUpdater;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static java.lang.String.format;
+import static org.dataconservancy.pass.grant.cli.DataLoaderErrors.ERR_ACTION_NOT_VALID;
+import static org.dataconservancy.pass.grant.cli.DataLoaderErrors.ERR_COULD_NOT_APPEND_UPDATE_TIMESTAMP;
+import static org.dataconservancy.pass.grant.cli.DataLoaderErrors.ERR_COULD_NOT_OPEN_CONFIGURATION_FILE;
+import static org.dataconservancy.pass.grant.cli.DataLoaderErrors.ERR_DATA_FILE_CANNOT_READ;
+import static org.dataconservancy.pass.grant.cli.DataLoaderErrors.ERR_DIRECTORY_LOOKUP_ERROR;
+import static org.dataconservancy.pass.grant.cli.DataLoaderErrors.ERR_HOME_DIRECTORY_NOT_FOUND;
+import static org.dataconservancy.pass.grant.cli.DataLoaderErrors.ERR_HOME_DIRECTORY_NOT_READABLE_AND_WRITABLE;
+import static org.dataconservancy.pass.grant.cli.DataLoaderErrors.ERR_INVALID_COMMAND_LINE_DATE;
+import static org.dataconservancy.pass.grant.cli.DataLoaderErrors.ERR_INVALID_COMMAND_LINE_TIMESTAMP;
+import static org.dataconservancy.pass.grant.cli.DataLoaderErrors.ERR_INVALID_TIMESTAMP;
+import static org.dataconservancy.pass.grant.cli.DataLoaderErrors.ERR_MODE_NOT_VALID;
+import static org.dataconservancy.pass.grant.cli.DataLoaderErrors.ERR_ORACLE_DRIVER_NOT_FOUND;
+import static org.dataconservancy.pass.grant.cli.DataLoaderErrors.ERR_REQUIRED_CONFIGURATION_FILE_MISSING;
+import static org.dataconservancy.pass.grant.cli.DataLoaderErrors.ERR_REQUIRED_DATA_FILE_MISSING;
+import static org.dataconservancy.pass.grant.cli.DataLoaderErrors.ERR_RESULT_SET_NULL;
+import static org.dataconservancy.pass.grant.cli.DataLoaderErrors.ERR_SQL_EXCEPTION;
+import static org.dataconservancy.pass.grant.data.DateTimeUtil.verifyDate;
+import static org.dataconservancy.pass.grant.data.DateTimeUtil.verifyDateTimeFormat;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -39,10 +54,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import static java.lang.String.format;
-import static org.dataconservancy.pass.grant.cli.DataLoaderErrors.*;
-import static org.dataconservancy.pass.grant.data.DateTimeUtil.verifyDate;
-import static org.dataconservancy.pass.grant.data.DateTimeUtil.verifyDateTimeFormat;
+import org.dataconservancy.pass.grant.data.GrantConnector;
+import org.dataconservancy.pass.grant.data.PassUpdater;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class does the orchestration for the pulling of grant and user data. The basic steps are to read in all of the
@@ -76,14 +91,19 @@ abstract class BaseGrantLoaderApp {
 
     /**
      * Constructor for this class
-     * @param startDate - the latest successful update timestamp, occurring as the last line of the update timestamps file
-     * @param email - a boolean which indicates whether or not to send email notification of the result of the current run
-     * @param mode - a String indicating whether we are updating grants, or existing users in PASS
-     * @param action - a String indicating an optional restriction to just pulling data from the data source, and saving a serialized
-     *               version to a file, or just taking serialized data in a file and loading it into PASS
+     *
+     * @param startDate    - the latest successful update timestamp, occurring as the last line of the update
+     *                     timestamps file
+     * @param email        - a boolean which indicates whether or not to send email notification of the result of the
+     *                    current run
+     * @param mode         - a String indicating whether we are updating grants, or existing users in PASS
+     * @param action       - a String indicating an optional restriction to just pulling data from the data source,
+     *                     and saving a serialized
+     *                     version to a file, or just taking serialized data in a file and loading it into PASS
      * @param dataFileName - a String representing the path to an output file for a pull, or input for a load
      */
-    BaseGrantLoaderApp(String startDate, String awardEndDate, boolean email, String mode, String action, String dataFileName) {
+    BaseGrantLoaderApp(String startDate, String awardEndDate, boolean email, String mode, String action,
+                       String dataFileName) {
         this.appHome = new File(System.getProperty("COEUS_HOME"));
         this.startDate = startDate;
         this.awardEndDate = awardEndDate;
@@ -97,7 +117,7 @@ abstract class BaseGrantLoaderApp {
         this.action = action;
         this.dataFileName = dataFileName;
         this.updateTimestampsFileName = mode + "_update_timestamps";
-        }
+    }
 
     /**
      * The orchestration method for everything. This is called by the CLI which only manages the
@@ -118,7 +138,7 @@ abstract class BaseGrantLoaderApp {
 
         //let's be careful about overwriting system properties
         String[] systemProperties = {"pass.fedora.user", "pass.fedora.password", "pass.fedora.baseurl",
-        "pass.elasticsearch.url", "pass.elasticsearch.limit"};
+                                     "pass.elasticsearch.url", "pass.elasticsearch.limit"};
 
         updateTimestampsFile = new File(appHome, updateTimestampsFileName);
         Properties connectionProperties;
@@ -127,12 +147,12 @@ abstract class BaseGrantLoaderApp {
 
         //check that we have a good value for mode
         if (!checkMode(mode)) {
-            throw processException(format(ERR_MODE_NOT_VALID,mode), null);
+            throw processException(format(ERR_MODE_NOT_VALID, mode), null);
         }
 
         //check that we have a good value for action
         if (!action.equals("") && !action.equals("pull") && !action.equals("load")) {
-            throw processException(format(ERR_ACTION_NOT_VALID,action), null);
+            throw processException(format(ERR_ACTION_NOT_VALID, action), null);
         }
 
         //first check that we have the required files
@@ -155,7 +175,7 @@ abstract class BaseGrantLoaderApp {
         }
 
         //check suitability of our input file
-        if(action.equals("load")) {
+        if (action.equals("load")) {
             if (!dataFile.exists()) {
                 throw processException(format(ERR_REQUIRED_DATA_FILE_MISSING, dataFileName), null);
             } else if (!dataFile.canRead()) {
@@ -176,7 +196,8 @@ abstract class BaseGrantLoaderApp {
             }
         }
 
-        //create connection properties - check for a user-space defined clear text file - need this for both pull and load
+        //create connection properties - check for a user-space defined clear text file - need this for both pull and
+        // load
         if (!connectionPropertiesFile.exists()) {
             throw processException(format(ERR_REQUIRED_CONFIGURATION_FILE_MISSING, connectionPropertiesFileName), null);
         }
@@ -193,19 +214,18 @@ abstract class BaseGrantLoaderApp {
 
         try {
             policyProperties = loadProperties(policyPropertiesFile);
-            } catch (RuntimeException e) {
-                throw processException(ERR_COULD_NOT_OPEN_CONFIGURATION_FILE, e);
-            }
+        } catch (RuntimeException e) {
+            throw processException(ERR_COULD_NOT_OPEN_CONFIGURATION_FILE, e);
+        }
 
-
-        List<Map<String,String>> resultSet = null;
+        List<Map<String, String>> resultSet = null;
 
         //now do things;
-        if (!action.equals("load")) {//action includes a pull - need to build a result set
+        if (!action.equals("load")) { //action includes a pull - need to build a result set
             //establish the start dateTime - it is either given as an option, or it is
             //the last entry in the update_timestamps file
 
-            if (mode.equals("grant") || mode.equals("user")) {//these aren't used for "funder"
+            if (mode.equals("grant") || mode.equals("user")) { //these aren't used for "funder"
                 if (startDate != null) {
                     if (startDate.length() > 0) {
                         if (!verifyDateTimeFormat(startDate)) {
@@ -245,17 +265,17 @@ abstract class BaseGrantLoaderApp {
             } catch (IOException e) {
                 throw processException(ERR_DIRECTORY_LOOKUP_ERROR, e);
             }
-        } else {//just doing a PASS load, must have results set in the data file
+        } else { //just doing a PASS load, must have results set in the data file
             try (FileInputStream fis = new FileInputStream(dataFile);
                  ObjectInputStream in = new ObjectInputStream(fis)
-                ) {
+            ) {
                 resultSet = Collections.unmodifiableList((List<Map<String, String>>) in.readObject());
             } catch (IOException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
         }
 
-        if (resultSet == null) {//this shouldn't happen
+        if (resultSet == null) { //this shouldn't happen
             throw processException(ERR_RESULT_SET_NULL, null);
         }
 
@@ -275,7 +295,8 @@ abstract class BaseGrantLoaderApp {
                     try {
                         appendLineToFile(updateTimestampsFile, passUpdater.getLatestUpdate());
                     } catch (IOException e) {
-                        throw processException(format(ERR_COULD_NOT_APPEND_UPDATE_TIMESTAMP, passUpdater.getLatestUpdate()), null);
+                        throw processException(
+                            format(ERR_COULD_NOT_APPEND_UPDATE_TIMESTAMP, passUpdater.getLatestUpdate()), null);
                     }
                 }
             }
@@ -286,9 +307,9 @@ abstract class BaseGrantLoaderApp {
             if (email) {
                 emailService.sendEmailMessage("Grant Loader Data Pull SUCCESS", message);
             }
-        } else {//don't need to update, just write the result set out to the data file
+        } else { //don't need to update, just write the result set out to the data file
             try (FileOutputStream fos = new FileOutputStream(dataFile);
-                 ObjectOutputStream out  = new ObjectOutputStream(fos)
+                 ObjectOutputStream out = new ObjectOutputStream(fos)
             ) {
                 out.writeObject(resultSet);
             } catch (IOException e) {
@@ -302,7 +323,7 @@ abstract class BaseGrantLoaderApp {
             sb.append(" ");
             sb.append(mode);
             sb.append(" record");
-            sb.append((size==1?"":"s")); //handle plural correctly
+            sb.append((size == 1 ? "" : "s")); //handle plural correctly
             sb.append(" into file ");
             sb.append(dataFileName);
             sb.append("\n");
@@ -317,6 +338,7 @@ abstract class BaseGrantLoaderApp {
 
     /**
      * This method processes a plain text properties file and returns a {@code Properties} object
+     *
      * @param propertiesFile - the properties {@code File} to be read
      * @return the Properties object derived from the supplied {@code File}
      * @throws PassCliException if the properties file could not be accessed.
@@ -324,12 +346,12 @@ abstract class BaseGrantLoaderApp {
     private Properties loadProperties(File propertiesFile) throws PassCliException {
         Properties properties = new Properties();
         String resource;
-        try{
+        try {
             resource = propertiesFile.getCanonicalPath();
         } catch (IOException e) {
             throw processException(ERR_COULD_NOT_OPEN_CONFIGURATION_FILE, e);
         }
-        try(InputStream resourceStream = new FileInputStream(resource)){
+        try (InputStream resourceStream = new FileInputStream(resource)) {
             properties.load(resourceStream);
         } catch (IOException e) {
             throw processException(ERR_COULD_NOT_OPEN_CONFIGURATION_FILE, e);
@@ -339,41 +361,43 @@ abstract class BaseGrantLoaderApp {
 
     /**
      * Ths method returns  a string representing the timestamp on the last line of the updated timestamps file
+     *
      * @return the timestamp string
      * @throws PassCliException if the updated timestamps file could not be accessed
      */
     private String getLatestTimestamp() throws PassCliException {
-        String lastLine="";
+        String lastLine = "";
         if (!timestamp) {
             return lastLine;
         }
         if (!updateTimestampsFile.exists()) {
-            throw processException(format(ERR_REQUIRED_CONFIGURATION_FILE_MISSING, updateTimestampsFileName),null);
+            throw processException(format(ERR_REQUIRED_CONFIGURATION_FILE_MISSING, updateTimestampsFileName), null);
         } else {
-            try( BufferedReader br = new BufferedReader(new FileReader(updateTimestampsFile))) {
+            try (BufferedReader br = new BufferedReader(new FileReader(updateTimestampsFile))) {
                 String readLine;
                 while ((readLine = br.readLine()) != null) {
-                    lastLine=readLine;
+                    lastLine = readLine;
                 }
             } catch (IOException e) {
                 throw processException(ERR_COULD_NOT_OPEN_CONFIGURATION_FILE, e);
             }
-            lastLine = lastLine.replaceAll("[\\r\\n]","");
+            lastLine = lastLine.replaceAll("[\\r\\n]", "");
         }
         return lastLine;
     }
 
     /**
-     * This method appends the timestamp representing the latest update timestamp of all of the {@code Grant}s being processed
+     * This method appends the timestamp representing the latest update timestamp of all of the {@code Grant}s being
+     * processed
      * in this running of the loader
-     * @param file - the {@code File} to write to
-     * @param updateString - the timestamp string to append to the {@code File}
      *
+     * @param file         - the {@code File} to write to
+     * @param updateString - the timestamp string to append to the {@code File}
      * @throws IOException if the append fails
      */
     private void appendLineToFile(File file, String updateString) throws IOException {
         OutputStreamWriter writer = new OutputStreamWriter(
-                new FileOutputStream(file.getCanonicalPath(), true), StandardCharsets.UTF_8);
+            new FileOutputStream(file.getCanonicalPath(), true), StandardCharsets.UTF_8);
         BufferedWriter fbw = new BufferedWriter(writer);
         fbw.write(updateString);
         fbw.newLine();
@@ -384,15 +408,16 @@ abstract class BaseGrantLoaderApp {
      * This method logs the supplied message and exception, reports the {@code Exception} to STDOUT, and
      * optionally causes an email regarding this {@code Exception} to be sent to the address configured
      * in the mail properties file
+     *
      * @param message - the error message
-     * @param e - the Exception
+     * @param e       - the Exception
      * @return = the {@code PassCliException} wrapper
      */
-    private PassCliException processException (String message, Exception e){
+    private PassCliException processException(String message, Exception e) {
         PassCliException clie;
 
         String errorSubject = "Data Loader ERROR";
-        if(e != null) {
+        if (e != null) {
             clie = new PassCliException(message, e);
             LOG.error(message, e);
             e.printStackTrace();
@@ -403,7 +428,7 @@ abstract class BaseGrantLoaderApp {
             clie = new PassCliException(message);
             LOG.error(message);
             System.err.println(message);
-            if(email) {
+            if (email) {
                 emailService.sendEmailMessage(errorSubject, message);
             }
         }
@@ -412,6 +437,7 @@ abstract class BaseGrantLoaderApp {
 
     /**
      * This method sets whether our data supports incremental updates by consulting data timestamps
+     *
      * @param timestamp boolean indicating whether we are supporting timestamps for updates
      */
     void setTimestamp(boolean timestamp) {
@@ -420,6 +446,7 @@ abstract class BaseGrantLoaderApp {
 
     /**
      * This method determines which objects may be uppdated - override in child classes
+     *
      * @param s the string for the mode
      * @return whether we support this mode
      */

@@ -23,14 +23,14 @@ import java.util.Map;
 
 /**
  * This interface defines methods for connecting to a grant datasource for us with PASS
- *
  */
 public interface GrantConnector {
 
     /**
      * If the grant data source is a database, we will need a query string
+     *
      * @param startDate - the date of the earlieat record we wish to get on this pull
-     * @param mode - indicates whether the data pull is for grants, or users
+     * @param mode      - indicates whether the data pull is for grants, or users
      * @return the query string
      */
     String buildQueryString(String startDate, String awardEndDate, String mode);
@@ -38,14 +38,15 @@ public interface GrantConnector {
     /**
      * This method retrieves the data from a data source. The format is a List of Maps - one List element for each
      * grant or user record.
+     *
      * @param queryString - a query string, if required
-     * @param mode - indicates whether the data pull is for grants, or users
+     * @param mode        - indicates whether the data pull is for grants, or users
      * @return the query string
      * @throws ClassNotFoundException if the driver is not found
-     * @throws SQLException if there is an SQL exception
-     * @throws IOException if there is an IO exception
+     * @throws SQLException           if there is an SQL exception
+     * @throws IOException            if there is an IO exception
      */
-    List<Map<String, String>> retrieveUpdates(String queryString, String mode)throws
-            ClassNotFoundException, SQLException, IOException;
+    List<Map<String, String>> retrieveUpdates(String queryString, String mode) throws
+        ClassNotFoundException, SQLException, IOException;
 
 }

@@ -16,11 +16,11 @@
 
 package org.dataconservancy.pass.grant.data;
 
+import static org.dataconservancy.pass.grant.data.DateTimeUtil.verifyDateTimeFormat;
+
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
-
-import static org.dataconservancy.pass.grant.data.DateTimeUtil.verifyDateTimeFormat;
 
 /**
  * Test class for static utility methods
@@ -81,7 +81,6 @@ public class DateTimeUtilTest {
         // .. but not 4
         date = "2018-01-01 07:59:16.1998";
         Assert.assertFalse(verifyDateTimeFormat(date));
-        
 
     }
 
@@ -116,12 +115,10 @@ public class DateTimeUtilTest {
         Assert.assertEquals(0, dateTime.getSecondOfMinute());
 
         Assert.assertEquals(0, dateTime.getMillisOfSecond());
-
     }
 
     /**
      * Test that verifyDate works
-     *
      */
     @Test
     public void testDateVerify() {

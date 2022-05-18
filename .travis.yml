@@ -7,8 +7,8 @@ jdk:
 sudo: true
 
 cache:
-    directories:
-      - $HOME/.m2
+  directories:
+    - $HOME/.m2
 
 before_install:
   - sudo service mysql stop

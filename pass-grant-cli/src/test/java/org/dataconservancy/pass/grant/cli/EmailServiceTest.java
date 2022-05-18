@@ -16,22 +16,23 @@
 
 package org.dataconservancy.pass.grant.cli;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.util.Properties;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import java.io.IOException;
-import java.util.Properties;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 /**
  * Test classs for email service
+ *
  * @author jrm@jhu.edu
  */
 public class EmailServiceTest {
@@ -42,15 +43,15 @@ public class EmailServiceTest {
 
     @Before
     public void setup() throws InterruptedException {
-        mailProperties.setProperty("mail.transport.protocol","SMTP");
+        mailProperties.setProperty("mail.transport.protocol", "SMTP");
         mailProperties.put("mail.smtp.starttls.enable", "false");
-        mailProperties.setProperty("mail.smtp.host","localhost");
-        mailProperties.setProperty("mail.smtp.port","3025");
-        mailProperties.setProperty("mail.smtp.user","testUser");
-        mailProperties.setProperty("mail.smtp.password","na");
-        mailProperties.put("mail.smtp.auth","false");
-        mailProperties.setProperty("mail.from","no-reply@dataconservancy.org");
-        mailProperties.setProperty("mail.to","luser@luser.com");
+        mailProperties.setProperty("mail.smtp.host", "localhost");
+        mailProperties.setProperty("mail.smtp.port", "3025");
+        mailProperties.setProperty("mail.smtp.user", "testUser");
+        mailProperties.setProperty("mail.smtp.password", "na");
+        mailProperties.put("mail.smtp.auth", "false");
+        mailProperties.setProperty("mail.from", "no-reply@dataconservancy.org");
+        mailProperties.setProperty("mail.to", "luser@luser.com");
 
         underTest = new EmailService(mailProperties);
 
@@ -72,8 +73,9 @@ public class EmailServiceTest {
     }
 
     /**
-     *  Test for sending a message
-     * @throws IOException if there was a problem getting the content of the message
+     * Test for sending a message
+     *
+     * @throws IOException        if there was a problem getting the content of the message
      * @throws MessagingException if there was a problem  sending the message
      */
     @Test

@@ -1,15 +1,20 @@
 package org.dataconservancy.pass.grant.data;
 
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_EMAIL;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_EMPLOYEE_ID;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_FIRST_NAME;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_HOPKINS_ID;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_INSTITUTIONAL_ID;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_LAST_NAME;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_MIDDLE_NAME;
+
+import java.util.Map;
+
 import org.dataconservancy.pass.client.PassClient;
 import org.dataconservancy.pass.model.User;
 import org.dataconservancy.pass.model.support.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
-
-import static org.dataconservancy.pass.grant.data.CoeusFieldNames.*;
-import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_INSTITUTIONAL_ID;
 
 public class JhuPassInitUpdater extends DefaultPassUpdater {
 
@@ -19,8 +24,7 @@ public class JhuPassInitUpdater extends DefaultPassUpdater {
     private static final String HOPKINS_ID_TYPE = "hopkinsid";
     private static final String JHED_ID_TYPE = "jhed";
 
-    public JhuPassInitUpdater(PassClient passClient)
-    {
+    public JhuPassInitUpdater(PassClient passClient) {
         super(new CoeusPassInitEntityUtil(), passClient);
         super.setDomain(DOMAIN);
     }
