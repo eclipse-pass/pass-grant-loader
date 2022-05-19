@@ -230,7 +230,6 @@ public class BasicPassUpdaterIT {
         rowMap.put(C_DIRECT_FUNDER_POLICY, directFunderPolicyUriString1);
         rowMap.put(C_PRIMARY_FUNDER_POLICY, primaryFunderPolicyUriString1);
 
-
         resultSet.clear();
         resultSet.add(rowMap);
 
@@ -345,7 +344,6 @@ public class BasicPassUpdaterIT {
         }
     }
 
-
     @Test
     public void updateUsersIT() throws InterruptedException {
 
@@ -378,7 +376,6 @@ public class BasicPassUpdaterIT {
             rowMap.put(C_UPDATE_TIMESTAMP, "2018-01-01 0" + 1 + ":00:00.0");
             userResultSet.add(rowMap);
         }
-
 
         passUpdater.updatePass(userResultSet, "user");
 
@@ -434,7 +431,6 @@ public class BasicPassUpdaterIT {
         assertNotNull(passClient.readResource(funder1Uri, Funder.class));
         assertNotNull(passClient.readResource(funder2Uri, Funder.class));
 
-
         String policyString1 = policy1Uri.getPath().substring("/fcrepo/rest/".length());
         assertTrue(policyString1.startsWith("policies"));
         String policyString2 = policy2Uri.getPath().substring("/fcrepo/rest/".length());
@@ -456,7 +452,6 @@ public class BasicPassUpdaterIT {
         rowMap.put(C_PRIMARY_FUNDER_LOCAL_KEY, "88888888"); // this one does not exist in pass
         rowMap.put(C_PRIMARY_FUNDER_POLICY, policyString2);
         funderResultSet.add(rowMap);
-
 
         sleep(20000); //allow indexer to index stuff - java client has to use elasticsearch
 
@@ -509,7 +504,6 @@ public class BasicPassUpdaterIT {
 
         assertEquals(1, statistics.getFundersCreated());
         assertEquals(2, statistics.getFundersUpdated());
-
 
         //DO AGAIN!! DO AGAIN!!
 

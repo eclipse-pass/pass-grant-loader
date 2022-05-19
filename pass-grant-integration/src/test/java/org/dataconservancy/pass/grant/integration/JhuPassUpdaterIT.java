@@ -60,7 +60,6 @@ import org.dataconservancy.pass.model.User;
 import org.junit.Before;
 import org.junit.Test;
 
-
 public class JhuPassUpdaterIT {
 
     String[] grantAwardNumber = {"B10000000", "B10000001", "B10000002"};
@@ -239,6 +238,5 @@ public class JhuPassUpdaterIT {
 
         return rowMap;
     }
-
 
 }

@@ -58,7 +58,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-
 public class HarvardPilotPassUpdaterIT {
 
     PassClient passClient = PassClientFactory.getPassClient();
@@ -106,9 +105,7 @@ public class HarvardPilotPassUpdaterIT {
         policyURI = passClient.createResource(policy);
         directFunderPolicyUriString = policyURI.toString().substring(prefix.length());
 
-
     }
-
 
     /**
      * The behavior of PassUpdate's updatePass() method is to compare the data coming in on the ResultSet with
