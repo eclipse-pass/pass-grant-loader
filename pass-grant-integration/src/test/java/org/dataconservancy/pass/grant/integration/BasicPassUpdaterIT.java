@@ -15,29 +15,32 @@
  */
 package org.dataconservancy.pass.grant.integration;
 
-import org.dataconservancy.pass.client.PassClient;
-import org.dataconservancy.pass.client.PassClientFactory;
-import org.dataconservancy.pass.grant.data.*;
-import org.dataconservancy.pass.model.Funder;
-import org.dataconservancy.pass.model.Grant;
-
-import org.dataconservancy.pass.model.Policy;
-import org.dataconservancy.pass.model.User;
-import org.dataconservancy.pass.model.support.Identifier;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
-
 import static java.lang.Thread.sleep;
-import static org.dataconservancy.pass.grant.data.CoeusFieldNames.*;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_ABBREVIATED_ROLE;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_DIRECT_FUNDER_LOCAL_KEY;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_DIRECT_FUNDER_NAME;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_DIRECT_FUNDER_POLICY;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_GRANT_AWARD_DATE;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_GRANT_AWARD_NUMBER;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_GRANT_AWARD_STATUS;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_GRANT_END_DATE;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_GRANT_LOCAL_KEY;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_GRANT_PROJECT_NAME;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_GRANT_START_DATE;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_PRIMARY_FUNDER_LOCAL_KEY;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_PRIMARY_FUNDER_NAME;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_PRIMARY_FUNDER_POLICY;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_UPDATE_TIMESTAMP;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_EMAIL;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_EMPLOYEE_ID;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_FIRST_NAME;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_LAST_NAME;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_MIDDLE_NAME;
 import static org.dataconservancy.pass.grant.data.DateTimeUtil.createJodaDateTime;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,6 +54,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+
+import org.dataconservancy.pass.client.PassClient;
+import org.dataconservancy.pass.client.PassClientFactory;
+import org.dataconservancy.pass.grant.data.BasicPassEntityUtil;
+import org.dataconservancy.pass.grant.data.BasicPassUpdater;
+import org.dataconservancy.pass.grant.data.CoeusPassEntityUtil;
+import org.dataconservancy.pass.grant.data.PassUpdateStatistics;
+import org.dataconservancy.pass.grant.data.PassUpdater;
+import org.dataconservancy.pass.model.Funder;
+import org.dataconservancy.pass.model.Grant;
+import org.dataconservancy.pass.model.Policy;
+import org.dataconservancy.pass.model.User;
+import org.dataconservancy.pass.model.support.Identifier;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * An integration test class for the BasicPassUpdater.
@@ -73,7 +95,7 @@ public class BasicPassUpdaterIT {
     PassUpdateStatistics statistics = passUpdater.getStatistics();
 
     @Rule
-    public TemporaryFolder folder= new TemporaryFolder();
+    public TemporaryFolder folder = new TemporaryFolder();
 
     @Before
     public void setup() {
@@ -90,16 +112,16 @@ public class BasicPassUpdaterIT {
             policy.setDescription("MOO");
             URI policyURI = passClient.createResource(policy);
             String primaryPolicyUriString = policyURI.toString().substring(prefix.length());
-            funderPolicyUriMap.put("PrimaryFunderPolicy"+i, policyURI);
+            funderPolicyUriMap.put("PrimaryFunderPolicy" + i, policyURI);
 
             policy = new Policy();
             policy.setTitle("Direct Policy" + i);
             policy.setDescription("MOO");
             policyURI = passClient.createResource(policy);
-            String directPolicyUriString =  policyURI.toString().substring(prefix.length());
-            funderPolicyUriMap.put("DirectFunderPolicy"+i, policyURI);
+            String directPolicyUriString = policyURI.toString().substring(prefix.length());
+            funderPolicyUriMap.put("DirectFunderPolicy" + i, policyURI);
 
-            if(i==1) {
+            if (i == 1) {
                 directFunderPolicyUriString1 = directPolicyUriString;
                 primaryFunderPolicyUriString1 = primaryPolicyUriString;
             }
@@ -126,7 +148,7 @@ public class BasicPassUpdaterIT {
 
             rowMap.put(C_UPDATE_TIMESTAMP, "2018-01-01 0" + i + ":00:00.0");
             rowMap.put(C_ABBREVIATED_ROLE, (i % 2 == 0 ? "P" : "C"));
-            rowMap.put(C_DIRECT_FUNDER_POLICY, directPolicyUriString );
+            rowMap.put(C_DIRECT_FUNDER_POLICY, directPolicyUriString);
             rowMap.put(C_PRIMARY_FUNDER_POLICY, primaryPolicyUriString);
 
             resultSet.add(rowMap);
@@ -136,8 +158,10 @@ public class BasicPassUpdaterIT {
 
     /**
      * The behavior of PassUpdate's updateGrants() method is to compare the data coming in on the ResultSet with
-     * the existing data in Pass, and create objects if Pass does not yet have them, and update them if they exist in Pass but
-     * there are differences in the fields for which the pull source is the authoritative source, or COEUS has a clue about other fields which are null
+     * the existing data in Pass, and create objects if Pass does not yet have them, and update them if they exist in
+     * Pass but
+     * there are differences in the fields for which the pull source is the authoritative source, or COEUS has a clue
+     * about other fields which are null
      * on the PASS object.
      *
      * @throws InterruptedException - the exception
@@ -206,7 +230,6 @@ public class BasicPassUpdaterIT {
         rowMap.put(C_DIRECT_FUNDER_POLICY, directFunderPolicyUriString1);
         rowMap.put(C_PRIMARY_FUNDER_POLICY, primaryFunderPolicyUriString1);
 
-
         resultSet.clear();
         resultSet.add(rowMap);
 
@@ -236,10 +259,10 @@ public class BasicPassUpdaterIT {
             assertEquals(grant.getAwardNumber(), passGrant.getAwardNumber());
             assertEquals(grant.getAwardStatus(), passGrant.getAwardStatus());
             assertEquals(grant.getLocalKey(), passGrant.getLocalKey());
-            if( i==1 ) {
-                assertEquals(grant.getProjectName() + "MOO", passGrant.getProjectName() );
-                assertEquals( createJodaDateTime("01/01/1999"), passGrant.getStartDate());
-                assertEquals( createJodaDateTime("01/01/1999"), passGrant.getStartDate());
+            if (i == 1) {
+                assertEquals(grant.getProjectName() + "MOO", passGrant.getProjectName());
+                assertEquals(createJodaDateTime("01/01/1999"), passGrant.getStartDate());
+                assertEquals(createJodaDateTime("01/01/1999"), passGrant.getStartDate());
             } else {
                 assertEquals(grant.getProjectName(), passGrant.getProjectName());
                 assertEquals(grant.getAwardDate(), passGrant.getAwardDate());
@@ -321,7 +344,6 @@ public class BasicPassUpdaterIT {
         }
     }
 
-
     @Test
     public void updateUsersIT() throws InterruptedException {
 
@@ -355,7 +377,6 @@ public class BasicPassUpdaterIT {
             userResultSet.add(rowMap);
         }
 
-
         passUpdater.updatePass(userResultSet, "user");
 
         //now update from the set of two users - the second one is not in PASS, but is not created
@@ -382,11 +403,11 @@ public class BasicPassUpdaterIT {
     @Test
     public void updateFundersIT() throws InterruptedException {
         Policy policy1 = new Policy();
-        policy1. setTitle("Policy One");
-        policy1. setDescription("Policy one Description");
+        policy1.setTitle("Policy One");
+        policy1.setDescription("Policy one Description");
         Policy policy2 = new Policy();
-        policy2. setTitle("Policy Two");
-        policy2. setDescription("Policy Two Description");
+        policy2.setTitle("Policy Two");
+        policy2.setDescription("Policy Two Description");
 
         URI policy1Uri = passClient.createResource(policy1);
         URI policy2Uri = passClient.createResource(policy2);
@@ -410,7 +431,6 @@ public class BasicPassUpdaterIT {
         assertNotNull(passClient.readResource(funder1Uri, Funder.class));
         assertNotNull(passClient.readResource(funder2Uri, Funder.class));
 
-
         String policyString1 = policy1Uri.getPath().substring("/fcrepo/rest/".length());
         assertTrue(policyString1.startsWith("policies"));
         String policyString2 = policy2Uri.getPath().substring("/fcrepo/rest/".length());
@@ -432,7 +452,6 @@ public class BasicPassUpdaterIT {
         rowMap.put(C_PRIMARY_FUNDER_LOCAL_KEY, "88888888"); // this one does not exist in pass
         rowMap.put(C_PRIMARY_FUNDER_POLICY, policyString2);
         funderResultSet.add(rowMap);
-
 
         sleep(20000); //allow indexer to index stuff - java client has to use elasticsearch
 
@@ -486,7 +505,6 @@ public class BasicPassUpdaterIT {
         assertEquals(1, statistics.getFundersCreated());
         assertEquals(2, statistics.getFundersUpdated());
 
-
         //DO AGAIN!! DO AGAIN!!
 
         sleep(20000); //allow indexer to index stuff - java client has to use elasticsearch
@@ -501,11 +519,11 @@ public class BasicPassUpdaterIT {
 
     @Test
     public void testSerializeAndDeserialize() throws IOException {
-        File serialized= folder.newFile("serializedData");
+        File serialized = folder.newFile("serializedData");
 
         try (FileOutputStream fos = new FileOutputStream(serialized);
-              ObjectOutputStream out  = new ObjectOutputStream(fos)
-            ){
+             ObjectOutputStream out = new ObjectOutputStream(fos)
+        ) {
             out.writeObject(resultSet);
         } catch (IOException e) {
             e.printStackTrace();
@@ -513,9 +531,9 @@ public class BasicPassUpdaterIT {
 
         List<Map<String, String>> input = null;
         try (FileInputStream fis = new FileInputStream(serialized);
-            ObjectInputStream in = new ObjectInputStream(fis)
-            ){
-            input = (List<Map<String,String>>)in.readObject();
+             ObjectInputStream in = new ObjectInputStream(fis)
+        ) {
+            input = (List<Map<String, String>>) in.readObject();
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }

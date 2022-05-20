@@ -15,10 +15,26 @@
  */
 package org.dataconservancy.pass.grant.data;
 
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_ABBREVIATED_ROLE;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_DIRECT_FUNDER_LOCAL_KEY;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_DIRECT_FUNDER_NAME;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_DIRECT_FUNDER_POLICY;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_GRANT_AWARD_NUMBER;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_GRANT_END_DATE;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_GRANT_LOCAL_KEY;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_GRANT_PROJECT_NAME;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_GRANT_START_DATE;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_PRIMARY_FUNDER_LOCAL_KEY;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_PRIMARY_FUNDER_NAME;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_PRIMARY_FUNDER_POLICY;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_EMAIL;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_EMPLOYEE_ID;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_FIRST_NAME;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_LAST_NAME;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,20 +47,17 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.dataconservancy.pass.grant.data.CoeusFieldNames.*;
-
 /**
- * This implementation of the Grant Connector interface processes data given to us in an Excel spreadsheet. We take in the information to produce
+ * This implementation of the Grant Connector interface processes data given to us in an Excel spreadsheet. We take
+ * in the information to produce
  * an intermediate data object which is compatible with our PASS data loading setup.
  *
  * @author jrm
  */
 public class HarvardPilotConnector implements GrantConnector {
-
 
     protected static final String HARVARD_DATA_FILE_PATH_PROPERTY = "harvard.data.file.path";
 
@@ -62,9 +75,10 @@ public class HarvardPilotConnector implements GrantConnector {
 
     /**
      * We don't consult a database, so this required method is null
-     * @param startDate - the date of the earliest record we wish to get on this pull
+     *
+     * @param startDate    - the date of the earliest record we wish to get on this pull
      * @param awardEndDate - the date the award ends
-     * @param mode - indicates whether the data pull is for grants, or users
+     * @param mode         - indicates whether the data pull is for grants, or users
      * @return null
      */
     public String buildQueryString(String startDate, String awardEndDate, String mode) {
@@ -82,9 +96,9 @@ public class HarvardPilotConnector implements GrantConnector {
             XSSFWorkbook workbook = new XSSFWorkbook(excelFile);
             Sheet funderSheet = workbook.getSheetAt(1);
             for (Row cells : funderSheet) {
-                if (cells.getRowNum() > 0) {//skip header
+                if (cells.getRowNum() > 0) { //skip header
                     funderNameMap.put(stringify(cells.getCell(0)),
-                            stringify(cells.getCell(1)));
+                                      stringify(cells.getCell(1)));
                 }
             }
             grantSheet = workbook.getSheetAt(0);
@@ -105,15 +119,15 @@ public class HarvardPilotConnector implements GrantConnector {
                 resultSet.add(rowMap);
             }
 
-        } else {//"grant" mode is default
+        } else { //"grant" mode is default
             for (Row cells : grantSheet) {
-                if (cells.getRowNum() > 0) {//skip header
+                if (cells.getRowNum() > 0) { //skip header
 
                     //we only process rows with a Harvard ID
                     String employeeId = stringify(cells.getCell(6));
                     //String email = stringify(cells.getCell(7));
 
-                    if(employeeId != null && employeeId.length()>0)  {
+                    if (employeeId != null && employeeId.length() > 0) {
                         Map<String, String> rowMap = new HashMap<>();
 
                         rowMap.put(C_GRANT_LOCAL_KEY, stringify(cells.getCell(0))); //A: Harvard grant ID
@@ -125,7 +139,8 @@ public class HarvardPilotConnector implements GrantConnector {
                         String role = stringify(cells.getCell(5)); //F: Role
                         rowMap.put(C_ABBREVIATED_ROLE, sortRole(role));
 
-                        rowMap.put(C_USER_EMPLOYEE_ID, stringify(cells.getCell(6))); //row G used to be Harvard id, we hack it for now
+                        rowMap.put(C_USER_EMPLOYEE_ID,
+                                   stringify(cells.getCell(6))); //row G used to be Harvard id, we hack it for now
                         rowMap.put(C_USER_EMAIL, stringify(cells.getCell(7))); //H: PI Email
 
                         String funderLocalKey = stringify(cells.getCell(8)); //I: Funder ID
@@ -161,7 +176,9 @@ public class HarvardPilotConnector implements GrantConnector {
      * @return a string representing a cell's contents
      */
     private String stringify(Cell cell) {
-        if (cell == null) { return null;}
+        if (cell == null) {
+            return null;
+        }
         if (cell.getCellType().equals(CellType.STRING)) {
             return cell.getStringCellValue().trim();
         } else if (cell.getCellType().equals(CellType.NUMERIC)) {
@@ -187,6 +204,6 @@ public class HarvardPilotConnector implements GrantConnector {
             return "P";
         }
         return "C";
-        }
+    }
 
 }

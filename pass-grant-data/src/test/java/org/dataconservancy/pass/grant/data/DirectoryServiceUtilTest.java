@@ -16,17 +16,17 @@
 
 package org.dataconservancy.pass.grant.data;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.dataconservancy.pass.grant.data.DirectoryServiceUtil.DIRECTORY_SERVICE_BASE_URL;
+import static org.dataconservancy.pass.grant.data.DirectoryServiceUtil.DIRECTORY_SERVICE_CLIENT_ID;
+import static org.dataconservancy.pass.grant.data.DirectoryServiceUtil.DIRECTORY_SERVICE_CLIENT_SECRET;
 
 import java.io.IOException;
 import java.util.Properties;
 
-import static org.dataconservancy.pass.grant.data.DirectoryServiceUtil.DIRECTORY_SERVICE_BASE_URL;
-import static org.dataconservancy.pass.grant.data.DirectoryServiceUtil.DIRECTORY_SERVICE_CLIENT_ID;
-import static org.dataconservancy.pass.grant.data.DirectoryServiceUtil.DIRECTORY_SERVICE_CLIENT_SECRET;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 
 /**
@@ -35,8 +35,10 @@ import static org.dataconservancy.pass.grant.data.DirectoryServiceUtil.DIRECTORY
  *
  * values for serviceUrl, clientId and clientSecret, must be supplied below.
  *
- * This test has been run against the running service with valid parameters and arguments supplied to the methods - this class has been
- * cleaned up after successful testing. because of the simplicity and isolation of this class, it does not need to be tested
+ * This test has been run against the running service with valid parameters and arguments supplied to the methods -
+ * this class has been
+ * cleaned up after successful testing. because of the simplicity and isolation of this class, it does not need to be
+ * tested
  * every build - just when something about the service changes. so we ignore it for now.
  *
  * To test, provide real connection parameter values, and a real kopkins id / employee id pair

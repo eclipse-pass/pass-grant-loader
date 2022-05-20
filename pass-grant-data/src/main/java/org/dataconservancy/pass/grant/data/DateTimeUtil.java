@@ -16,50 +16,54 @@
 
 package org.dataconservancy.pass.grant.data;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 /**
  * This utility class provides static methods for intermunging Joda DateTime objects and timestamp strings
  */
 public class DateTimeUtil {
+    private DateTimeUtil () {
+        //never called
+    }
 
     /**
      * A method to convert a timestamp string from our database to a Joda DateTime object
+     *
      * @param dateString the timestamp string
      * @return the corresponding DataTime object
      */
     public static DateTime createJodaDateTime(String dateString) {
 
-        if(dateString != null) {
+        if (dateString != null) {
             DateTime dateTime = null;
 
             String[] parts = dateString.split(" ");
 
             //do we have time parts? the timestamp form is yyyy-mm-dd hh:mm:ss.m
             if (parts.length > 1) {
-                if(verifyDateTimeFormat(dateString)) {
-                String date = parts[0]; //yyyy-mm-dd
-                String[] dateParts = date.split("-");
-                int year = Integer.parseInt(dateParts[0]);
-                int month = Integer.parseInt(dateParts[1]);
-                int day = Integer.parseInt(dateParts[2]);
-                String time = parts[1]; //hh:mm:ss.m{mm}
-                String[] timeParts = time.split(":");
-                int hour = Integer.parseInt(timeParts[0]);
-                int minute = Integer.parseInt(timeParts[1]);
-                String[] secondParts = timeParts[2].split("\\.");
-                int second = Integer.parseInt(secondParts[0]);
-                int millisecond = Integer.parseInt(secondParts[1]);//seems to be always 0 in our data
-                dateTime = new DateTime(year, month, day, hour, minute, second, millisecond, DateTimeZone.UTC);
+                if (verifyDateTimeFormat(dateString)) {
+                    String date = parts[0]; //yyyy-mm-dd
+                    String[] dateParts = date.split("-");
+                    int year = Integer.parseInt(dateParts[0]);
+                    int month = Integer.parseInt(dateParts[1]);
+                    int day = Integer.parseInt(dateParts[2]);
+                    String time = parts[1]; //hh:mm:ss.m{mm}
+                    String[] timeParts = time.split(":");
+                    int hour = Integer.parseInt(timeParts[0]);
+                    int minute = Integer.parseInt(timeParts[1]);
+                    String[] secondParts = timeParts[2].split("\\.");
+                    int second = Integer.parseInt(secondParts[0]);
+                    int millisecond = Integer.parseInt(secondParts[1]);//seems to be always 0 in our data
+                    dateTime = new DateTime(year, month, day, hour, minute, second, millisecond, DateTimeZone.UTC);
                 }
-            } else if(verifyDate(dateString)){//we may have just a date - date format is mm/day/year
+            } else if (verifyDate(dateString)) { //we may have just a date - date format is mm/day/year
                 parts = dateString.split("/");
                 int month = Integer.parseInt(parts[0]);
                 int day = Integer.parseInt(parts[1]);
@@ -73,13 +77,16 @@ public class DateTimeUtil {
     }
 
     /**
-     * Dates must be specified in the format "yyyy-mm-dd hh:mm:ss.m{mm}" . We only check for this format, and not for validity
+     * Dates must be specified in the format "yyyy-mm-dd hh:mm:ss.m{mm}" . We only check for this format, and not for
+     * validity
      * (for example, "2018-02-31 ... " passes)
+     *
      * @param date the date to be checked
      * @return a boolean indicating whether the date matches the required format
      */
     public static boolean verifyDateTimeFormat(String date) {
-        String regexJHU = "^[0-9]{4}-(1[0-2]|0[1-9])-(3[01]|[12][0-9]|0[1-9]) ([2][0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]\\.[0-9]{1,3}$";
+        String regexJHU = "^[0-9]{4}-(1[0-2]|0[1-9])-(3[01]|[12][0-9]|0[1-9]) ([2][0-3]|[01][0-9])" +
+                          ":[0-5][0-9]:[0-5][0-9]\\.[0-9]{1,3}$";
         Pattern patternJHU = Pattern.compile(regexJHU);
         Matcher matcherJHU = patternJHU.matcher(date);
         return matcherJHU.matches();
@@ -90,7 +97,9 @@ public class DateTimeUtil {
      */
 
     public static boolean verifyDate(String date) {
-        if (date == null) return false;
+        if (date == null) {
+            return false;
+        }
         DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
         format.setLenient(false);
         try {
@@ -100,6 +109,4 @@ public class DateTimeUtil {
         }
         return true;
     }
-
-
 }

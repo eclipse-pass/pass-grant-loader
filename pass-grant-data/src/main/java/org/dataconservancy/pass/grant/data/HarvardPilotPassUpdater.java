@@ -16,28 +16,30 @@
 
 package org.dataconservancy.pass.grant.data;
 
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_EMAIL;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_FIRST_NAME;
+import static org.dataconservancy.pass.grant.data.CoeusFieldNames.C_USER_LAST_NAME;
+
+import java.util.Map;
+
 import org.dataconservancy.pass.client.PassClient;
 import org.dataconservancy.pass.model.User;
 import org.dataconservancy.pass.model.support.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
-import static org.dataconservancy.pass.grant.data.CoeusFieldNames.*;
-
 public class HarvardPilotPassUpdater extends BasicPassUpdater {
 
     private static final Logger LOG = LoggerFactory.getLogger(HarvardPilotPassUpdater.class);
     private static final String DOMAIN = "harvard.edu";
 
-    public HarvardPilotPassUpdater () {
+    public HarvardPilotPassUpdater() {
         super(new HarvardPilotPassEntityUtil());
         super.setDomain(DOMAIN);
     }
 
-    public HarvardPilotPassUpdater (PassClient passClient) {
-        super(new HarvardPilotPassEntityUtil(), passClient );
+    public HarvardPilotPassUpdater(PassClient passClient) {
+        super(new HarvardPilotPassEntityUtil(), passClient);
         super.setDomain(DOMAIN);
     }
 
@@ -48,7 +50,7 @@ public class HarvardPilotPassUpdater extends BasicPassUpdater {
         //user.setMiddleName(rowMap.getOrDefault(C_USER_MIDDLE_NAME, null));
         user.setLastName(rowMap.get(C_USER_LAST_NAME));
         user.setDisplayName(rowMap.get(C_USER_FIRST_NAME) + " " + rowMap.get(C_USER_LAST_NAME));
-        String email =rowMap.get(C_USER_EMAIL);
+        String email = rowMap.get(C_USER_EMAIL);
         user.setEmail(email);
         //
         //Build the List of locatorIds - put the most reliable ids first

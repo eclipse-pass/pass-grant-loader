@@ -16,15 +16,15 @@
 
 package org.dataconservancy.pass.grant.cli;
 
-import org.kohsuke.args4j.Argument;
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
-import org.kohsuke.args4j.Option;
+import static java.lang.String.format;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.String.format;
+import org.kohsuke.args4j.Argument;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
 
 public class HarvardPilotGrantLoaderCLI {
 
@@ -33,29 +33,42 @@ public class HarvardPilotGrantLoaderCLI {
      * General Options
      */
 
-    /** Request for help/usage documentation */
-    @Option(name = "-h", aliases = { "-help", "--help" }, usage = "print help message")
+    /**
+     * Request for help/usage documentation
+     */
+    @Option(name = "-h", aliases = {"-help", "--help"}, usage = "print help message")
     private boolean help = false;
 
-    /** Requests the current version number of the cli application. */
-    @Option(name = "-v", aliases = { "-version", "--version" }, usage = "print version information")
+    /**
+     * Requests the current version number of the cli application.
+     */
+    @Option(name = "-v", aliases = {"-version", "--version"}, usage = "print version information")
     private boolean version = false;
 
-    @Option(name = "-e", aliases = { "-email", "--email" }, usage = "flag to use the internal email server for notification")
+    @Option(name = "-e", aliases = {"-email", "--email"},
+            usage = "flag to use the internal email server for notification")
     private static boolean email = false;
 
-    @Option(name = "-m", aliases = { "-mode", "--mode" }, usage = "option to set the query mode to \"grant\" (default) or \"user\"")
+    @Option(name = "-m", aliases = {"-mode", "--mode"},
+            usage = "option to set the query mode to \"grant\" (default) or \"user\"")
     private static String mode = "grant";
 
-    /** Specifies an optional action - either "pull" or "load" - to restrict the operation of the application to only pull data
-     * to store in a file, or to only load into PASS data taken from a stored file, respectively. In either case, the path to
-     * the file in question is the first command line argument after all options. If no action is specified, the default is to perform
+    /**
+     * Specifies an optional action - either "pull" or "load" - to restrict the operation of the application to only
+     * pull data
+     * to store in a file, or to only load into PASS data taken from a stored file, respectively. In either case, the
+     * path to
+     * the file in question is the first command line argument after all options. If no action is specified, the
+     * default is to perform
      * a pull followed directly by a load.
      */
-    @Option(name = "-a", aliases = { "-action", "--action" }, usage = "Action to be taken - 'pull' is for the data pull only," +
-            "'load' is for Fedora load only. Either option requires a file path specified as an argument after all options - an" +
-            " output file in the case of 'pull', and an input file in the case of 'load'. If no action is specified, " +
-            "the data will be pulled from COEUS and loaded directly into PASS")
+    @Option(name = "-a", aliases = {"-action", "--action"},
+            usage = "Action to be taken - 'pull' is for the data pull only," +
+                    "'load' is for Fedora load only. Either option requires a file path specified as an argument " +
+                    "after all options - an" +
+                    " output file in the case of 'pull', and an input file in the case of 'load'. If no action is " +
+                    "specified, " +
+                    "the data will be pulled from COEUS and loaded directly into PASS")
     private static String action = "";
 
     @Argument
@@ -64,6 +77,7 @@ public class HarvardPilotGrantLoaderCLI {
     /**
      * The main method which parses the command line arguments and options; also reports errors and exit statuses
      * when the {@code HarvardPilotGrantLoaderApp} executes
+     *
      * @param args the command line arguments
      */
     public static void main(String[] args) {
@@ -81,21 +95,22 @@ public class HarvardPilotGrantLoaderCLI {
                 System.exit(0);
             } else if (application.version) {
                 System.err.println(PassCliException.class.getPackage()
-                        .getImplementationVersion());
+                                                         .getImplementationVersion());
                 System.exit(0);
             }
 
             if (action.equals("pull") || action.equals("load")) {
-                if (arguments.size() > 0 ) {
+                if (arguments.size() > 0) {
                     dataFileName = arguments.get(0);
                 } else {
-                    System.err.println(format("Action %s requires a command line argument after the options" , action));
+                    System.err.println(format("Action %s requires a command line argument after the options", action));
                     System.exit(1);
                 }
             }
 
             /* Run the package generation application proper */
-            HarvardPilotGrantLoaderApp app = new HarvardPilotGrantLoaderApp(null, null, email, mode, action, dataFileName);
+            HarvardPilotGrantLoaderApp app = new HarvardPilotGrantLoaderApp(null, null, email, mode, action,
+                                                                            dataFileName);
             app.run();
             System.exit((0));
         } catch (CmdLineException e) {

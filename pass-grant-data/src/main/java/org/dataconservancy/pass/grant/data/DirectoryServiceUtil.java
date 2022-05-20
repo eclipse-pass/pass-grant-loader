@@ -16,6 +16,14 @@
 
 package org.dataconservancy.pass.grant.data;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
+
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -24,18 +32,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
-
 /**
- * This util class is designed to hit a service which provides resolution of one identifier to another. The two endpoints
- * provide lookups between our Hopkins Id, which is a durable identifier for all members of the Hopkins community, and the
- * employee ID, which is a durable identifier for all Hopkins employees. This lookup service is necessary because we do not
+ * This util class is designed to hit a service which provides resolution of one identifier to another. The two
+ * endpoints
+ * provide lookups between our Hopkins Id, which is a durable identifier for all members of the Hopkins community,
+ * and the
+ * employee ID, which is a durable identifier for all Hopkins employees. This lookup service is necessary because we
+ * do not
  * have access to the wider identifier in our grants data source.
  *
  * @author jrm
@@ -102,7 +105,6 @@ class DirectoryServiceUtil {
         }
     }
 
-
     /**
      * Return Hopkins ID for a given employee ID. we cache lookups in a map so that we only need to perform
      * a lookup once per session per user.
@@ -111,13 +113,13 @@ class DirectoryServiceUtil {
      * @return the user's Hopkins ID - should never be null
      * @throws IOException if the service cannot be reached
      */
-    String getHopkinsIdForEmployeeId(String employeeId) throws  IOException {
+    String getHopkinsIdForEmployeeId(String employeeId) throws IOException {
         String hopkinsId;
-        if ( !ee2hopkins.containsKey( employeeId) ) {
+        if (!ee2hopkins.containsKey(employeeId)) {
             hopkinsId = askDirectoryForMappedValue(Type.EMPLOYEE2HOPKINS, employeeId);
-            ee2hopkins.put( employeeId, hopkinsId );
+            ee2hopkins.put(employeeId, hopkinsId);
         } else {
-            hopkinsId = ee2hopkins.get ( employeeId );
+            hopkinsId = ee2hopkins.get(employeeId);
         }
         return hopkinsId;
     }
@@ -125,17 +127,18 @@ class DirectoryServiceUtil {
     /**
      * Return employee ID for a given Hopkins ID. we cache lookups in a map so that we only need to perform
      * a lookup once per session per user.
+     *
      * @param hopkinsId the user's Hopkins ID
      * @return the user's employee ID if it exists; null if it does not
      * @throws IOException if there is an IO exception
      */
     String getEmployeeIdForHopkinsId(String hopkinsId) throws IOException {
         String employeeId;
-        if ( !hopkins2ee.containsKey( hopkinsId ) ) {
+        if (!hopkins2ee.containsKey(hopkinsId)) {
             employeeId = askDirectoryForMappedValue(Type.HOPKINS2EMPLOYEE, hopkinsId);
-            hopkins2ee.put( hopkinsId,  employeeId );
+            hopkins2ee.put(hopkinsId, employeeId);
         } else {
-            employeeId = hopkins2ee.get ( hopkinsId );
+            employeeId = hopkins2ee.get(hopkinsId);
         }
         return employeeId;
     }
@@ -149,30 +152,31 @@ class DirectoryServiceUtil {
         }
         serviceUrl = directoryBaseUrl + suffix;
 
-        HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(serviceUrl)).newBuilder().addQueryParameter(name, sourceId);
+        HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(serviceUrl)).newBuilder()
+                                            .addQueryParameter(name, sourceId);
         String url = urlBuilder.build().toString();
 
         Request request = new Request.Builder().header("client_id", directoryClientId)
-                .header("client_secret", directoryClientSecret).url(url).build();
+                                               .header("client_secret", directoryClientSecret).url(url).build();
 
         Response response = client.newCall(request).execute();
 
         assert response.body() != null;
         JsonParser parser = factory.createParser(response.body().string());
-            String mappedValue = null;
-            while (!parser.isClosed()) {
-                JsonToken jsonToken = parser.nextToken();
-                if (JsonToken.FIELD_NAME.equals(jsonToken)) {
-                    String fieldName = parser.getCurrentName();
-                    parser.nextToken();
-                    if (sourceId.equals(fieldName)) {
-                        mappedValue = parser.getValueAsString();
-                        mappedValue = mappedValue.equals("NULL") ? null : mappedValue;
-                    }
+        String mappedValue = null;
+        while (!parser.isClosed()) {
+            JsonToken jsonToken = parser.nextToken();
+            if (JsonToken.FIELD_NAME.equals(jsonToken)) {
+                String fieldName = parser.getCurrentName();
+                parser.nextToken();
+                if (sourceId.equals(fieldName)) {
+                    mappedValue = parser.getValueAsString();
+                    mappedValue = mappedValue.equals("NULL") ? null : mappedValue;
                 }
             }
+        }
 
-            return mappedValue;
+        return mappedValue;
 
     }
 

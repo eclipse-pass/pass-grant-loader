@@ -32,7 +32,7 @@ public class PassUpdateStatistics {
     private int pisAdded = 0;
     private int coPisAdded = 0;
     private String latestUpdateString = "";
-    private String report ="";
+    private String report = "";
 
     private String type;
 
@@ -46,7 +46,7 @@ public class PassUpdateStatistics {
         switch (type) {
             case "grant":
                 sb.append(format("%s grant records processed; the most recent update in this batch has timestamp %s",
-                        resultSetSize, latestUpdateString));
+                                 resultSetSize, latestUpdateString));
                 sb.append("\n");
                 sb.append(format("%s Pis and %s Co-Pis were processed on %s grants", pisAdded, coPisAdded, size));
                 sb.append("\n\n");
@@ -61,7 +61,7 @@ public class PassUpdateStatistics {
                 break;
             case "user":
                 sb.append(format("%s user records processed; the most recent update in this batch has timestamp %s",
-                        resultSetSize, latestUpdateString));
+                                 resultSetSize, latestUpdateString));
                 sb.append("\n");
                 sb.append("Pass Activity");
                 sb.append("\n\n");
@@ -70,10 +70,12 @@ public class PassUpdateStatistics {
                 break;
             case "funder":
                 sb.append(format("%s funder records processed",
-                        resultSetSize));
+                                 resultSetSize));
                 sb.append("\n\n");
                 sb.append(format("%s Funders were created; %s Funders were updated", fundersCreated, fundersUpdated));
                 sb.append("\n");
+                break;
+            default:
                 break;
         }
         this.report = sb.toString();
@@ -89,7 +91,7 @@ public class PassUpdateStatistics {
         pisAdded = 0;
         coPisAdded = 0;
         latestUpdateString = "";
-        report ="";
+        report = "";
     }
 
     public int getGrantsUpdated() {
@@ -128,7 +130,7 @@ public class PassUpdateStatistics {
         return fundersCreated;
     }
 
-    void addFundersCreated(){
+    void addFundersCreated() {
         fundersCreated++;
     }
 
@@ -136,7 +138,7 @@ public class PassUpdateStatistics {
         return usersCreated;
     }
 
-    void addUsersCreated(){
+    void addUsersCreated() {
         usersCreated++;
     }
 

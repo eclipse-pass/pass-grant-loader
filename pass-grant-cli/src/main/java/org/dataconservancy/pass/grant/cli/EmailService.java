@@ -16,6 +16,8 @@
 
 package org.dataconservancy.pass.grant.cli;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Properties;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -25,13 +27,13 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.io.UnsupportedEncodingException;
-import java.util.Properties;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * An email service for reporting errors or results of running a GrantLoaderApp
+ *
  * @author jrm@jhu.edu
  */
 class EmailService {
@@ -40,33 +42,35 @@ class EmailService {
 
     /**
      * The constructor
+     *
      * @param mailProperties - the mail properties
      */
-    EmailService(Properties mailProperties){
+    EmailService(Properties mailProperties) {
         this.mailProperties = mailProperties;
     }
 
     /**
      * The method which sends the email
+     *
      * @param subject the email subject
      * @param message the body of the email
      */
-    void sendEmailMessage(String subject, String message){
+    void sendEmailMessage(String subject, String message) {
 
         try {
             Session session = Session.getInstance(mailProperties,
-                    new Authenticator() {
-                        @Override
-                        protected PasswordAuthentication getPasswordAuthentication() {
-                            return new PasswordAuthentication(mailProperties
-                                    .getProperty("mail.smtp.user"), mailProperties
-                                    .getProperty("mail.smtp.password"));
-                        }
-                    });
+                new Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(
+                            mailProperties.getProperty("mail.smtp.user"),
+                            mailProperties.getProperty("mail.smtp" + ".password"));
+                    }
+                });
             Message msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress((String) mailProperties.get("mail.from"), "COEUS Data Loader"));
             msg.addRecipient(Message.RecipientType.TO,
-                    new InternetAddress(mailProperties.getProperty("mail.to"), "COEUS Client"));
+                             new InternetAddress(mailProperties.getProperty("mail.to"), "COEUS Client"));
             msg.setSubject(subject);
             msg.setText(message);
             Transport.send(msg);
