@@ -14,14 +14,14 @@ jobs:
 
   call-workaround:
     name: Run Parent POM Workaround
-    uses: jhu-library-operations-test/pass-grant-loader/.github/workflows/parent-pom-workaround.yml@main
+    uses: eclipse-pass/pass-grant-loader/.github/workflows/parent-pom-workaround.yml@main
   
   call-tests-unit:
     name: Run Unit Tests
-    uses: jhu-library-operations-test/pass-grant-loader/.github/workflows/tests-unit.yml@main
+    uses: eclipse-pass/pass-grant-loader/.github/workflows/tests-unit.yml@main
     needs: call-workaround
     
 #  call-tests-integration:
 #    name: Run Integration Tests
-#    uses: jhu-library-operations-test/pass-grant-loader/.github/workflows/tests-integration.yml@main
+#    uses: eclipse-pass/pass-grant-loader/.github/workflows/tests-integration.yml@main
 #    needs: call-workaround
