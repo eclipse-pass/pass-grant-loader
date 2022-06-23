@@ -20,7 +20,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <artifactId>pass-grant-loader</artifactId>
-    <groupId>org.dataconservancy.pass</groupId>
+    <groupId>org.eclipse.pass</groupId>
     <version>1.4.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -29,15 +29,15 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.dataconservancy.pass</groupId>
+      <groupId>org.eclipse.pass</groupId>
       <artifactId>pass-data-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.dataconservancy.pass</groupId>
+      <groupId>org.eclipse.pass</groupId>
       <artifactId>pass-model</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.dataconservancy.pass</groupId>
+      <groupId>org.eclipse.pass</groupId>
       <artifactId>pass-client-api</artifactId>
     </dependency>
     <dependency>
