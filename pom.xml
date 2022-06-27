@@ -26,7 +26,6 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
-  <groupId>org.dataconservancy.pass</groupId>
   <artifactId>pass-grant-loader</artifactId>
   <packaging>pom</packaging>
   <version>1.4.1-SNAPSHOT</version>
@@ -72,9 +71,9 @@
     <maven.shade.plugin.version>3.2.3</maven.shade.plugin.version>
     <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
     <mockito.version>3.3.3</mockito.version>
-    <pass.client.version>0.7.0</pass.client.version>
-    <pass.client.api.version>0.7.0</pass.client.api.version>
-    <pass.model.version>0.7.0</pass.model.version>
+    <pass.client.version>0.9.0-SNAPSHOT</pass.client.version>
+    <pass.client.api.version>0.9.0-SNAPSHOT</pass.client.api.version>
+    <pass.model.version>0.9.0-SNAPSHOT</pass.model.version>
     <ojdbc8.version>19.3.0.0</ojdbc8.version>
     <openpojo.version>0.8.13</openpojo.version>
     <slf4j.version>1.7.30</slf4j.version>
@@ -142,17 +141,17 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.dataconservancy.pass</groupId>
+        <groupId>org.eclipse.pass</groupId>
         <artifactId>pass-data-client</artifactId>
         <version>${pass.client.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.dataconservancy.pass</groupId>
+        <groupId>org.eclipse.pass</groupId>
         <artifactId>pass-model</artifactId>
         <version>${pass.model.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.dataconservancy.pass</groupId>
+        <groupId>org.eclipse.pass</groupId>
         <artifactId>pass-client-api</artifactId>
         <version>${pass.client.api.version}</version>
       </dependency>

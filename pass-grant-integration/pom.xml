@@ -20,7 +20,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <artifactId>pass-grant-loader</artifactId>
-    <groupId>org.dataconservancy.pass</groupId>
+    <groupId>org.eclipse.pass</groupId>
     <version>1.4.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -94,12 +94,12 @@
                   <FCREPO_STOMP_PORT>${FCREPO_STOMP_PORT}</FCREPO_STOMP_PORT>
                   <FCREPO_JMS_BASEURL>http://${FCREPO_HOST}:${FCREPO_PORT}/fcrepo/rest</FCREPO_JMS_BASEURL>
                   <FCREPO_ACTIVEMQ_CONFIGURATION>classpath:/activemq-queue.xml</FCREPO_ACTIVEMQ_CONFIGURATION>
-                  <COMPACTION_URI>https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.1.jsonld
+                  <COMPACTION_URI>https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.4.jsonld
                   </COMPACTION_URI>
                   <COMPACTION_PRELOAD_URI_PASS_STATIC>
-                    https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.1.jsonld
+                    https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.4.jsonld
                   </COMPACTION_PRELOAD_URI_PASS_STATIC>
-                  <COMPACTION_PRELOAD_FILE_PASS_STATIC>/usr/local/tomcat/lib/context-3.1.jsonld
+                  <COMPACTION_PRELOAD_FILE_PASS_STATIC>/usr/local/tomcat/lib/context-3.4.jsonld
                   </COMPACTION_PRELOAD_FILE_PASS_STATIC>
                 </env>
                 <ports>
@@ -122,37 +122,6 @@
                 </wait>
               </run>
             </image>
-            <image>
-              <alias>indexer</alias>
-              <name>oapass/indexer:0.0.15-3.1-SNAPSHOT</name>
-              <run>
-                <namingStrategy>alias</namingStrategy>
-                <env>
-                  <PI_FEDORA_USER>fedoraAdmin</PI_FEDORA_USER>
-                  <PI_FEDORA_PASS>moo</PI_FEDORA_PASS>
-                  <PI_FEDORA_INTERNAL_BASE>http://${FCREPO_HOST}:${FCREPO_PORT}/fcrepo/rest/</PI_FEDORA_INTERNAL_BASE>
-                  <PI_ES_BASE>http://elasticsearch:9200/</PI_ES_BASE>
-                  <PI_ES_INDEX>http://elasticsearch:9200/pass/</PI_ES_INDEX>
-                  <PI_FEDORA_JMS_BROKER>tcp://${FCREPO_HOST}:${FCREPO_JMS_PORT}</PI_FEDORA_JMS_BROKER>
-                  <PI_FEDORA_JMS_QUEUE>fedora</PI_FEDORA_JMS_QUEUE>
-                  <PI_TYPE_PREFIX>http://oapass.org/ns/pass#</PI_TYPE_PREFIX>
-                  <PI_LOG_LEVEL>debug</PI_LOG_LEVEL>
-                </env>
-                <links>
-                  <link>fcrepo:localhost</link>
-                  <link>elasticsearch</link>
-                </links>
-                <volumes>
-                  <bind>./src/test/resources/docker/hosts:/etc/hosts</bind>
-                </volumes>
-                <network>
-                  <mode>custom</mode>
-                  <name>pass</name>
-                  <alias>indexer</alias>
-                </network>
-              </run>
-            </image>
-
             <image>
               <alias>elasticsearch</alias>
               <name>docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.3</name>
@@ -177,6 +146,42 @@
                   </http>
                   <time>120000</time>
                 </wait>
+              </run>
+            </image>
+            <image>
+              <alias>indexer</alias>
+              <name>oapass/indexer:0.0.15-3.1-SNAPSHOT</name>
+              <run>
+                <namingStrategy>alias</namingStrategy>
+                <env>
+                  <PI_FEDORA_USER>fedoraAdmin</PI_FEDORA_USER>
+                  <PI_FEDORA_PASS>moo</PI_FEDORA_PASS>
+                  <PI_FEDORA_INTERNAL_BASE>http://${FCREPO_HOST}:${FCREPO_PORT}/fcrepo/rest/</PI_FEDORA_INTERNAL_BASE>
+                  <PI_ES_BASE>http://elasticsearch:9200/</PI_ES_BASE>
+                  <PI_ES_INDEX>http://elasticsearch:9200/pass/</PI_ES_INDEX>
+                  <PI_FEDORA_JMS_BROKER>tcp://${FCREPO_HOST}:${FCREPO_JMS_PORT}</PI_FEDORA_JMS_BROKER>
+                  <PI_FEDORA_JMS_QUEUE>fedora</PI_FEDORA_JMS_QUEUE>
+                  <PI_TYPE_PREFIX>http://oapass.org/ns/pass#</PI_TYPE_PREFIX>
+                  <PI_LOG_LEVEL>debug</PI_LOG_LEVEL>
+                </env>
+                <wait>
+                  <http>
+                    <url>http://${ES_HOST}:${ES_PORT}/pass</url>
+                  </http>
+                  <time>120000</time>
+                </wait>
+                <links>
+                  <link>fcrepo:localhost</link>
+                  <link>elasticsearch</link>
+                </links>
+                <volumes>
+                  <bind>./src/test/resources/docker/hosts:/etc/hosts</bind>
+                </volumes>
+                <network>
+                  <mode>custom</mode>
+                  <name>pass</name>
+                  <alias>indexer</alias>
+                </network>
               </run>
             </image>
           </images>
@@ -224,17 +229,17 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.dataconservancy.pass</groupId>
+      <groupId>org.eclipse.pass</groupId>
       <artifactId>pass-model</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.dataconservancy.pass</groupId>
+      <groupId>org.eclipse.pass</groupId>
       <artifactId>pass-data-client</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.dataconservancy.pass</groupId>
+      <groupId>org.eclipse.pass</groupId>
       <artifactId>pass-grant-data</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
