@@ -86,7 +86,6 @@
     <javax.mail.version>1.6.2</javax.mail.version>
     <junit.version>4.13</junit.version>
     <logback-classic.version>1.2.3</logback-classic.version>
-    <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
     <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
     <maven.shade.plugin.version>3.2.3</maven.shade.plugin.version>
     <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
@@ -224,10 +223,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>${maven.compiler.plugin.version}</version>
           <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
             <compilerArgument>-Xlint:all</compilerArgument>
             <showWarnings>true</showWarnings>
             <showDeprecation>true</showDeprecation>
