@@ -84,7 +84,7 @@
     <docker-maven-plugin.version>0.30.0</docker-maven-plugin.version>
     <greenmail.version>1.5.13</greenmail.version>
     <javax.mail.version>1.6.2</javax.mail.version>
-    <junit.version>4.13</junit.version>
+    <junit.version>4.13.1</junit.version>
     <logback-classic.version>1.2.3</logback-classic.version>
     <mockito.version>3.3.3</mockito.version>
     <ojdbc8.version>19.3.0.0</ojdbc8.version>
