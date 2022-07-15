@@ -15,9 +15,7 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -27,8 +25,39 @@
   </parent>
 
   <artifactId>pass-grant-loader</artifactId>
-  <packaging>pom</packaging>
   <version>0.1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>Eclipse-PASS Grant Loader</name>
+  <description>Loader for populating the repository with Grant, User and Funder objects</description>
+  <url>https://github.com/eclipse-pass/main</url>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Jim Martino</name>
+      <email>jrm@jhu.edu</email>
+      <organization>The Sheridan Libraries, Johns Hopkins University</organization>
+      <organizationUrl>https://www.library.jhu.edu/</organizationUrl>
+    </developer>
+    <developer>
+      <name>Mark Patton</name>
+      <email>mpatton@jhu.edu</email>
+      <organization>The Sheridan Libraries, Johns Hopkins University</organization>
+      <organizationUrl>https://www.library.jhu.edu/</organizationUrl>
+    </developer>
+    <developer>
+      <name>John Abrahams</name>
+      <email>jabrah20@jhu.edu</email>
+      <organization>The Sheridan Libraries, Johns Hopkins University</organization>
+      <organizationUrl>https://www.library.jhu.edu/</organizationUrl>
+    </developer>
+  </developers>
 
   <modules>
     <module>pass-grant-cli</module>
@@ -36,21 +65,12 @@
     <module>pass-grant-integration</module>
   </modules>
 
-  <profiles>
-
-    <profile>
-      <id>external</id>
-      <activation>
-        <property>
-          <name>external</name>
-        </property>
-      </activation>
-      <properties>
-        <scp.port>122</scp.port>
-      </properties>
-    </profile>
-
-  </profiles>
+  <scm>
+    <connection>scm:git:git://github.com/eclipse-pass/pass-grant-loader.git</connection>
+    <developerConnection>scm:git:ssh://github.com:eclipse-pass/pass-grant-loader.git</developerConnection>
+    <url>http://github.com/eclipse-pass/pass-grant-loader/tree/main</url>
+    <tag>HEAD</tag>
+  </scm>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -66,94 +86,29 @@
     <javax.mail.version>1.6.2</javax.mail.version>
     <junit.version>4.13</junit.version>
     <logback-classic.version>1.2.3</logback-classic.version>
-    <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
-    <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
-    <maven.shade.plugin.version>3.2.3</maven.shade.plugin.version>
-    <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
     <mockito.version>3.3.3</mockito.version>
-    <pass.client.version>0.1.0-SNAPSHOT</pass.client.version>
-    <pass.client.api.version>0.1.0-SNAPSHOT</pass.client.api.version>
-    <pass.model.version>0.9.0-SNAPSHOT</pass.model.version>
     <ojdbc8.version>19.3.0.0</ojdbc8.version>
     <openpojo.version>0.8.13</openpojo.version>
     <slf4j.version>1.7.30</slf4j.version>
     <unitils.version>3.4.6</unitils.version>
   </properties>
 
-  <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>${maven.compiler.plugin.version}</version>
-          <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
-            <compilerArgument>-Xlint:all</compilerArgument>
-            <showWarnings>true</showWarnings>
-            <showDeprecation>true</showDeprecation>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>${maven.surefire.plugin.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-shade-plugin</artifactId>
-          <version>${maven.shade.plugin.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>io.fabric8</groupId>
-          <artifactId>docker-maven-plugin</artifactId>
-          <version>${docker-maven-plugin.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>build-helper-maven-plugin</artifactId>
-          <version>${build-helper-maven-plugin.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-failsafe-plugin</artifactId>
-          <version>${maven-failsafe-plugin.version}</version>
-        </plugin>
-
-      </plugins>
-    </pluginManagement>
-
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-deploy-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-      </plugin>
-    </plugins>
-
-  </build>
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.eclipse.pass</groupId>
         <artifactId>pass-data-client</artifactId>
-        <version>${pass.client.version}</version>
+        <version>${pass-java-client.version}</version>
       </dependency>
       <dependency>
         <groupId>org.eclipse.pass</groupId>
         <artifactId>pass-model</artifactId>
-        <version>${pass.model.version}</version>
+        <version>${pass-java-client.version}</version>
       </dependency>
       <dependency>
         <groupId>org.eclipse.pass</groupId>
         <artifactId>pass-client-api</artifactId>
-        <version>${pass.client.api.version}</version>
+        <version>${pass-java-client.version}</version>
       </dependency>
       <dependency>
         <groupId>args4j</groupId>
@@ -258,4 +213,74 @@
       </snapshots>
     </repository>
   </repositories>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <compilerArgument>-Xlint:all</compilerArgument>
+            <showWarnings>true</showWarnings>
+            <showDeprecation>true</showDeprecation>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven-surefire-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>${maven-shade-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>io.fabric8</groupId>
+          <artifactId>docker-maven-plugin</artifactId>
+          <version>${docker-maven-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>${build-helper-maven-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>${maven-failsafe-plugin.version}</version>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+
+    <profile>
+      <id>external</id>
+      <activation>
+        <property>
+          <name>external</name>
+        </property>
+      </activation>
+      <properties>
+        <scp.port>122</scp.port>
+      </properties>
+    </profile>
+
+  </profiles>
 </project>
