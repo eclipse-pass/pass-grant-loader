@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.eclipse.pass</groupId>
     <artifactId>pass-grant-loader</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
   </parent>
 
   <artifactId>pass-grant-cli</artifactId>
@@ -90,8 +90,7 @@
               <finalName>jhu-grant-loader-${project.parent.version}</finalName>
               <shadedClassifierName>jhu</shadedClassifierName>
               <transformers>
-                <transformer implementation=
-                               "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <mainClass>org.dataconservancy.pass.grant.cli.JhuGrantLoaderCLI</mainClass>
                 </transformer>
               </transformers>
@@ -123,8 +122,7 @@
               <finalName>harvard-pilot-grant-loader-${project.parent.version}</finalName>
               <shadedClassifierName>harvard</shadedClassifierName>
               <transformers>
-                <transformer implementation=
-                               "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <mainClass>org.dataconservancy.pass.grant.cli.HarvardPilotGrantLoaderCLI</mainClass>
                 </transformer>
               </transformers>
