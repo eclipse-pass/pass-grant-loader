@@ -151,6 +151,11 @@ We can perform a pull of grants from COEUS, and store it in a file, by:
 
 `java -DCOEUS_HOME="/home/luser/coeus" -jar jhu-grant-loader-<version>.jar -s "2018-03-29 14:30:00.0" -a pull /home/luser/coeus/pulls/thisPull.data`
 
+An option has been added - `-g ` - if a particular single grant, identified by its GRANT_NUMBER in COEUS, is desired. For example:
+
+`java -DCOEUS_HOME="/home/luser/coeus" -jar jhu-grant-loader-<version>.jar -s "2018-03-29 14:30:00.0" -g "12345678" -a pull /home/luser/coeus/pulls/thisPull.data`
+
+
 this data pull can be applied to the PASS repository by a subsequent invocation
 
 `java -DCOEUS_HOME="/home/luser/coeus" -jar jhu-grant-loader-<version>.jar -a load /home/luser/coeus/pulls/thisPull.data`
