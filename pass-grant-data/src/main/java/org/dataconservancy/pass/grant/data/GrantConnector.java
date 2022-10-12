@@ -33,7 +33,7 @@ public interface GrantConnector {
      * @param mode      - indicates whether the data pull is for grants, or users
      * @return the query string
      */
-    String buildQueryString(String startDate, String awardEndDate, String mode);
+    String buildQueryString(String startDate, String awardEndDate, String mode, String grant);
 
     /**
      * This method retrieves the data from a data source. The format is a List of Maps - one List element for each

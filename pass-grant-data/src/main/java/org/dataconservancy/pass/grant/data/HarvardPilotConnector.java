@@ -81,7 +81,7 @@ public class HarvardPilotConnector implements GrantConnector {
      * @param mode         - indicates whether the data pull is for grants, or users
      * @return null
      */
-    public String buildQueryString(String startDate, String awardEndDate, String mode) {
+    public String buildQueryString(String startDate, String awardEndDate, String mode, String grant) {
         return null;
     }
 

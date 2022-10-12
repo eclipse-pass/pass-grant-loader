@@ -78,7 +78,7 @@ public class CoeusConnectorTest {
                                      " AND A.GRANT_NUMBER IS NOT NULL";
 
         Assert.assertEquals(expectedQueryString,
-                            connector.buildQueryString("2018-06-01 06:00:00.0", "01/01/2011", "grant"));
+                            connector.buildQueryString("2018-06-01 06:00:00.0", "01/01/2011", "grant", null));
 
         expectedQueryString = "SELECT A.AWARD_ID, A.AWARD_STATUS, A.GRANT_NUMBER, A.TITLE, A.AWARD_DATE," +
                               " A.AWARD_START, A.AWARD_END, A.SPONSOR, A.SPOSNOR_CODE, A.UPDATE_TIMESTAMP, B" +
@@ -101,7 +101,7 @@ public class CoeusConnectorTest {
                               " AND A.GRANT_NUMBER IS NOT NULL";
 
         Assert.assertEquals(expectedQueryString,
-                            connector.buildQueryString("2018-06-01 06:00:00.0", "02/03/1999", "grant"));
+                            connector.buildQueryString("2018-06-01 06:00:00.0", "02/03/1999", "grant", null));
 
     }
 
@@ -113,7 +113,7 @@ public class CoeusConnectorTest {
                                      "UPDATE_TIMESTAMP FROM COEUS.JHU_FACULTY_FORCE_PRSN_DETAIL " +
                                      "WHERE UPDATE_TIMESTAMP > TIMESTAMP '2018-13-14 06:00:00.0'";
         Assert.assertEquals(expectedQueryString,
-                            connector.buildQueryString("2018-13-14 06:00:00.0", "01/01/2011", "user"));
+                            connector.buildQueryString("2018-13-14 06:00:00.0", "01/01/2011", "user", null));
 
     }
 
@@ -124,7 +124,7 @@ public class CoeusConnectorTest {
             "SELECT SPONSOR_NAME, SPONSOR_CODE FROM COEUS.SWIFT_SPONSOR WHERE SPONSOR_CODE IN (moo, baa)";
         String expectedQueryString2 =
             "SELECT SPONSOR_NAME, SPONSOR_CODE FROM COEUS.SWIFT_SPONSOR WHERE SPONSOR_CODE IN (baa, moo)";
-        String actualQueryString = connector.buildQueryString(null, null, "funder");
+        String actualQueryString = connector.buildQueryString(null, null, "funder", null);
         Assert.assertTrue(expectedQueryString1.equals(actualQueryString) ||
                           expectedQueryString2.equals(actualQueryString));
     }

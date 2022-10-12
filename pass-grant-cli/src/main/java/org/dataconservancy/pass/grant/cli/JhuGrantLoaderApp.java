@@ -29,8 +29,8 @@ class JhuGrantLoaderApp extends BaseGrantLoaderApp {
     boolean init;
 
     JhuGrantLoaderApp(String startDate, String awardEndDate, boolean email, String mode, String action,
-                      String dataFileName, boolean init) {
-        super(startDate, awardEndDate, email, mode, action, dataFileName);
+                      String dataFileName, boolean init, String grant) {
+        super(startDate, awardEndDate, email, mode, action, dataFileName, grant);
         super.setTimestamp(true);
         this.init = init;
     }

@@ -248,13 +248,13 @@ public class CoeusConnector implements GrantConnector {
         return mapList;
     }
 
-    public String buildQueryString(String startDate, String awardEndDate, String mode) {
+    public String buildQueryString(String startDate, String awardEndDate, String mode, String grant) {
         if (mode.equals("user")) {
             return buildUserQueryString(startDate);
         } else if (mode.equals("funder")) {
             return buildFunderQueryString();
         } else {
-            return buildGrantQueryString(startDate, awardEndDate);
+            return buildGrantQueryString(startDate, awardEndDate, grant);
         }
     }
 
@@ -280,7 +280,7 @@ public class CoeusConnector implements GrantConnector {
      * @param startDate - the date we want to start the query against UPDATE_TIMESTAMP
      * @return the SQL query string
      */
-    private String buildGrantQueryString(String startDate, String awardEndDate) {
+    private String buildGrantQueryString(String startDate, String awardEndDate, String grant) {
 
         String[] viewFields = {
             "A." + C_GRANT_AWARD_NUMBER,
@@ -327,8 +327,11 @@ public class CoeusConnector implements GrantConnector {
         sb.append(
             "AND (B.ABBREVIATED_ROLE = 'P' OR B.ABBREVIATED_ROLE = 'C' OR REGEXP_LIKE (UPPER(B.ROLE), '^CO " +
             "?-?INVESTIGATOR$')) ");
-        sb.append("AND A.GRANT_NUMBER IS NOT NULL");
-
+        if (grant == null || grant.isEmpty()) {
+            sb.append("AND A.GRANT_NUMBER IS NOT NULL");
+        } else { // have a specifig grant to process
+            sb.append("AND A.GRANT_NUMBER = '" + grant + "'");
+        }
         String queryString = sb.toString();
 
         LOG.debug("Query string is: {}", queryString);
