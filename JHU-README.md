@@ -125,7 +125,7 @@ which is needed for the Funder object.
 
 The tool can be used to perform a just a pull from COEUS by using the `-a pull` option. This saves a serialized version
 of the COEUS data to be applied to PASS at a later time, into a file specified by a path which is the first (only)
-command line argument. The subsequent loading into PASS would be accomplished by invoking the tool with the -a "load"
+command line argument. The subsequent loading into PASS would be accomplished by invoking the tool with the `-a "load"`
 option, specifying the serialized data file as the command line argument.
 
 ### Invocation
@@ -169,7 +169,7 @@ For Funders, to simply apply the `policy.properties` file data to existing funde
 
 ### Email Notification
 
-We may add the command line option -e to enable the use of the email server to send email messages after each execution
+We may add the command line option `-e` to enable the use of the email server to send email messages after each execution
 which involves a load into PASS. This will report information on the successful run of the application, or information
 on what went wrong in the case of an error. If this option is enabled, the email configuration file must be filled out
 accordingly. We also have a command line option -m to pass in the mode of operation - grant or user - depending on which
