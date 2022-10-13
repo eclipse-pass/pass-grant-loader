@@ -125,10 +125,7 @@ public class CoeusConnectorTest {
 
         Assert.assertEquals(expectedQueryString,
                             connector.buildQueryString("2018-06-01 06:00:00.0", "02/03/1999", "grant", "12345678"));
-
     }
-
-
 
     @Test
     public void testBuildUserQueryString() {
