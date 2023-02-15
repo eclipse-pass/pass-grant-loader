@@ -86,6 +86,7 @@ abstract class BaseGrantLoaderApp {
     private final String dataFileName;
     private boolean local = false;
     private boolean timestamp = false;
+    private String grant = null;
 
     private final String updateTimestampsFileName;
 
@@ -101,9 +102,10 @@ abstract class BaseGrantLoaderApp {
      *                     and saving a serialized
      *                     version to a file, or just taking serialized data in a file and loading it into PASS
      * @param dataFileName - a String representing the path to an output file for a pull, or input for a load
+     * @param grant - a single grant number to be run
      */
     BaseGrantLoaderApp(String startDate, String awardEndDate, boolean email, String mode, String action,
-                       String dataFileName) {
+                       String dataFileName, String grant) {
         this.appHome = new File(System.getProperty("COEUS_HOME"));
         this.startDate = startDate;
         this.awardEndDate = awardEndDate;
@@ -117,6 +119,7 @@ abstract class BaseGrantLoaderApp {
         this.action = action;
         this.dataFileName = dataFileName;
         this.updateTimestampsFileName = mode + "_update_timestamps";
+        this.grant = grant;
     }
 
     /**
@@ -246,7 +249,7 @@ abstract class BaseGrantLoaderApp {
             }
 
             GrantConnector connector = configureConnector(connectionProperties, policyProperties);
-            String queryString = connector.buildQueryString(startDate, awardEndDate, mode);
+            String queryString = connector.buildQueryString(startDate, awardEndDate, mode, grant);
 
             //special case for when we process funders, but do not want to consult COEUS -
             //just use local properties file to map funders to policies

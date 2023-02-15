@@ -26,7 +26,7 @@ import org.dataconservancy.pass.grant.data.PassUpdater;
 class HarvardPilotGrantLoaderApp extends BaseGrantLoaderApp {
     HarvardPilotGrantLoaderApp(String startDate, String awardEndDate, boolean email, String mode, String action,
                                String dataFileName) {
-        super(startDate, awardEndDate, email, mode, action, dataFileName);
+        super(startDate, awardEndDate, email, mode, action, dataFileName, null);
         super.setTimestamp(false);
     }
 

@@ -106,6 +106,14 @@ public class JhuGrantLoaderCLI {
                     "the data will be pulled from COEUS and loaded directly into PASS")
     private static String action = "";
 
+    /**
+     * Specifies a single grant to be loaded
+     */
+
+    @Option(name = "-g", aliases = {"grant", "--grant"},
+            usage = "option to specify a single grant to process")
+    private static String grant = null;
+
     @Argument
     private static List<String> arguments = new ArrayList<>();
 
@@ -145,7 +153,7 @@ public class JhuGrantLoaderCLI {
 
             /* Run the package generation application proper */
             JhuGrantLoaderApp app = new JhuGrantLoaderApp(startDate, awardEndDate, email, mode, action, dataFileName,
-                                                          init);
+                                                          init, grant);
             app.run();
             System.exit((0));
         } catch (CmdLineException e) {
