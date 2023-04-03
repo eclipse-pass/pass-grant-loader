@@ -100,7 +100,7 @@ Because of the way data is processed, it is most convenient to use the COEUS ver
 un-localized locakKey for this Funder - so for example, `8675309` rather than `johnshopkins.edu:funder8675309`), and the
 policy URI with the PASS_FEDORA_BASEURL prefix stripped off. Since this base URL ends in fcrepo/rest/, the value of a
 property will start with the string
-"properties".
+"policies".
 
 An example entry in the policy.properties file linking a Funder with PASS localKey "johnshopkins.edu:funder:8675309 with
 a Policy with URI http://localhost:8080/fcrepo/rest/policies/e7/3f/26/70/e73f2670-6ef6-4201-bbcd-04631a93d852
